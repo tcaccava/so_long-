@@ -20,7 +20,7 @@
 # include <unistd.h>
 # include <stdarg.h>
 
-# define T 32
+# define T 64
 # define KEY_W 119
 # define KEY_A 97
 # define KEY_S 115
@@ -32,6 +32,9 @@ typedef struct s_enemy
 {
 	int		x;
 	int		y;
+	int current_frame;  // per sapere quale frame mostrare
+	int anim_timer;     // per gestire la velocità dell’animazione
+
 }			t_enemy;
 
 typedef struct s_data
@@ -42,6 +45,11 @@ typedef struct s_data
 	int		line_length;
 	int		endian;
 }			t_data;
+
+typedef enum e_dir {
+    DIR_LEFT,
+    DIR_RIGHT
+}   t_dir;
 
 typedef struct s_game
 {
@@ -55,10 +63,24 @@ typedef struct s_game
 	void	*collectibles_img;
 	void	*exit_img;
 	void	*empty_img;
-	void	*enemy_img;
+	void	*enemy_sprites[8];
+	// Muri / bordi
+	void    *wall_top_img;
+	void    *wall_bottom_img;
+	void    *wall_left_img;
+	void    *wall_right_img;
+
+// Angoli
+	void    *wall_topleft_img;
+	void    *wall_topright_img;
+	void    *wall_bottomleft_img;
+	void    *wall_bottomright_img;
+
 	int		player_x;
 	int		player_y;
-	void	*player_sprites[3];
+	t_dir   player_dir;
+	void	*player_sprites[8];
+	void    *player_left_sprites[8];
 	int		current_frame;
 	int		anim_timer;
 	int		anim_speed;
@@ -133,5 +155,11 @@ int			is_file_empty(char *filename);
 char		*ft_itoa(int n);
 void		destroy_image_if_not_null(void *mlx, void *img);
 void		check_invalid_chars(t_game *game);
+void update_enemy_animation(t_game *game, t_enemy *enemy);
+void render_enemies(t_game *game);
+int count_enemies(t_game *game);
+
+
+
 
 #endif

@@ -17,21 +17,64 @@ void	load_images(t_game *game)
 	int	img_width;
 	int	img_height;
 
-	game->wall_img = mlx_xpm_file_to_image(game->mlx, "wall.xpm", &img_width,
-			&img_height);
-	game->player_sprites[0] = mlx_xpm_file_to_image(game->mlx, "frame1.xpm",
+	game->wall_img = mlx_xpm_file_to_image(game->mlx, "wall.xpm", &img_width, &img_height);
+	game->wall_top_img = mlx_xpm_file_to_image(game->mlx, "wall_top.xpm", &img_width, &img_height);
+	game->wall_bottom_img = mlx_xpm_file_to_image(game->mlx, "wall_bottom.xpm", &img_width, &img_height);
+	game->wall_left_img = mlx_xpm_file_to_image(game->mlx, "wall_left.xpm", &img_width, &img_height);
+	game->wall_right_img = mlx_xpm_file_to_image(game->mlx, "wall_right.xpm", &img_width, &img_height);
+	game->wall_topleft_img = mlx_xpm_file_to_image(game->mlx, "wall_topleft.xpm", &img_width, &img_height);
+	game->wall_topright_img = mlx_xpm_file_to_image(game->mlx, "wall_topright.xpm", &img_width, &img_height);
+	game->wall_bottomleft_img = mlx_xpm_file_to_image(game->mlx, "wall_bottomleft.xpm", &img_width, &img_height);
+	game->wall_bottomright_img = mlx_xpm_file_to_image(game->mlx, "wall_bottomright.xpm", &img_width, &img_height);
+
+	game->enemy_sprites[0] = mlx_xpm_file_to_image(game->mlx, "enemy1.xpm", &img_width, &img_height);
+	game->enemy_sprites[1] = mlx_xpm_file_to_image(game->mlx, "enemy2.xpm", &img_width, &img_height);
+	game->enemy_sprites[2] = mlx_xpm_file_to_image(game->mlx, "enemy3.xpm", &img_width, &img_height);
+	game->enemy_sprites[3] = mlx_xpm_file_to_image(game->mlx, "enemy4.xpm", &img_width, &img_height);
+	game->enemy_sprites[4] = mlx_xpm_file_to_image(game->mlx, "enemy5.xpm", &img_width, &img_height);
+	game->enemy_sprites[5] = mlx_xpm_file_to_image(game->mlx, "enemy6.xpm", &img_width, &img_height);
+	game->enemy_sprites[6] = mlx_xpm_file_to_image(game->mlx, "enemy7.xpm", &img_width, &img_height);
+	game->enemy_sprites[7] = mlx_xpm_file_to_image(game->mlx, "enemy8.xpm", &img_width, &img_height);
+	
+	game->player_left_sprites[0] = mlx_xpm_file_to_image(game->mlx, "lidle1.xpm",
 			&img_width, &img_height);
-	game->player_sprites[1] = mlx_xpm_file_to_image(game->mlx, "frame2.xpm",
+	game->player_left_sprites[1] = mlx_xpm_file_to_image(game->mlx, "lidle2.xpm",
 			&img_width, &img_height);
-	game->player_sprites[2] = mlx_xpm_file_to_image(game->mlx, "frame3.xpm",
+	game->player_left_sprites[2] = mlx_xpm_file_to_image(game->mlx, "lidle3.xpm",
 			&img_width, &img_height);
+	game->player_left_sprites[3] = mlx_xpm_file_to_image(game->mlx, "lidle4.xpm",
+			&img_width, &img_height);
+	game->player_left_sprites[4] = mlx_xpm_file_to_image(game->mlx, "lidle5.xpm",
+			&img_width, &img_height);
+	game->player_left_sprites[5] = mlx_xpm_file_to_image(game->mlx, "lidle6.xpm",
+			&img_width, &img_height);
+	game->player_left_sprites[6] = mlx_xpm_file_to_image(game->mlx, "lidle7.xpm",
+			&img_width, &img_height);
+	game->player_left_sprites[7] = mlx_xpm_file_to_image(game->mlx, "lidle8.xpm",
+			&img_width, &img_height);
+	
+	game->player_sprites[0] = mlx_xpm_file_to_image(game->mlx, "idle1.xpm",
+			&img_width, &img_height);
+	game->player_sprites[1] = mlx_xpm_file_to_image(game->mlx, "idle1.xpm",
+			&img_width, &img_height);
+	game->player_sprites[2] = mlx_xpm_file_to_image(game->mlx, "idle1.xpm",
+			&img_width, &img_height);
+	game->player_sprites[3] = mlx_xpm_file_to_image(game->mlx, "idle1.xpm",
+			&img_width, &img_height);
+	game->player_sprites[4] = mlx_xpm_file_to_image(game->mlx, "idle1.xpm",
+			&img_width, &img_height);
+	game->player_sprites[5] = mlx_xpm_file_to_image(game->mlx, "idle1.xpm",
+			&img_width, &img_height);
+	game->player_sprites[6] = mlx_xpm_file_to_image(game->mlx, "idle1.xpm",
+			&img_width, &img_height);
+	game->player_sprites[7] = mlx_xpm_file_to_image(game->mlx, "idle1.xpm",
+			&img_width, &img_height);
+
 	game->collectibles_img = mlx_xpm_file_to_image(game->mlx,
 			"collectibles.xpm", &img_width, &img_height);
 	game->exit_img = mlx_xpm_file_to_image(game->mlx, "exit.xpm", &img_width,
 			&img_height);
 	game->empty_img = mlx_xpm_file_to_image(game->mlx, "empty.xpm", &img_width,
-			&img_height);
-	game->enemy_img = mlx_xpm_file_to_image(game->mlx, "enemy.xpm", &img_width,
 			&img_height);
 }
 
@@ -57,6 +100,8 @@ void	init_game(t_game *game, char *file)
 	game->current_frame = 0;
 	game->anim_timer = 0;
 	game->anim_speed = 5;
+	game->player_dir = DIR_RIGHT;
+	load_enemies(game);
 }
 
 void	display_moves(t_game *game)

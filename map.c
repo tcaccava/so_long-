@@ -12,9 +12,9 @@
 
 #include "so_long.h"
 
-void	allocate_map(t_game *game, char *file)
+void allocate_map(t_game *game, char *file)
 {
-	int	num_lines;
+	int num_lines;
 
 	num_lines = count_map_lines(file);
 	if (num_lines <= 0)
@@ -26,11 +26,11 @@ void	allocate_map(t_game *game, char *file)
 	game->height = num_lines;
 }
 
-void	fill_map(t_game *game, char *file)
+void fill_map(t_game *game, char *file)
 {
-	int		fd;
-	int		i;
-	char	*line;
+	int fd;
+	int i;
+	char *line;
 
 	fd = open(file, O_RDONLY);
 	i = 0;
@@ -54,11 +54,11 @@ void	fill_map(t_game *game, char *file)
 	count_collectibles(game);
 }
 
-int	count_map_lines(char *file)
+int count_map_lines(char *file)
 {
-	int		fd;
-	char	*line;
-	int		count;
+	int fd;
+	char *line;
+	int count;
 
 	fd = open(file, O_RDONLY);
 	count = 0;
@@ -73,9 +73,9 @@ int	count_map_lines(char *file)
 	return (count);
 }
 
-int	render_map(t_game *game)
+int render_map(t_game *game)
 {
-	int	y;
+	int y;
 
 	if (!game || !game->map)
 	{
@@ -92,24 +92,42 @@ int	render_map(t_game *game)
 	return (0);
 }
 
-void	render_tile(t_game *game, char tile, int x, int y)
+void render_tile(t_game *game, char tile, int x, int y)
 {
 	if (tile == '1')
-		mlx_put_image_to_window(game->mlx, game->win, game->wall_img, x * T, y
-			* T);
+	{
+		if (x == 0 && y == 0)
+			mlx_put_image_to_window(game->mlx, game->win, game->wall_topleft_img, x * T, y * T);
+		else if (x == game->width - 1 && y == 0)
+			mlx_put_image_to_window(game->mlx, game->win, game->wall_topright_img, x * T, y * T);
+		else if (x == 0 && y == game->height - 1)
+			mlx_put_image_to_window(game->mlx, game->win, game->wall_bottomleft_img, x * T, y * T);
+		else if (x == game->width - 1 && y == game->height - 1)
+			mlx_put_image_to_window(game->mlx, game->win, game->wall_bottomright_img, x * T, y * T);
+		else if (y == 0)
+			mlx_put_image_to_window(game->mlx, game->win, game->wall_top_img, x * T, y * T);
+		else if (y == game->height - 1)
+			mlx_put_image_to_window(game->mlx, game->win, game->wall_bottom_img, x * T, y * T);
+		else if (x == 0)
+			mlx_put_image_to_window(game->mlx, game->win, game->wall_left_img, x * T, y * T);
+		else if (x == game->width - 1)
+			mlx_put_image_to_window(game->mlx, game->win, game->wall_right_img, x * T, y * T);
+		else
+			mlx_put_image_to_window(game->mlx, game->win, game->wall_img, x * T, y * T);
+	}
 	else if (tile == 'C')
-		mlx_put_image_to_window(game->mlx, game->win, game->collectibles_img, x
-			* T, y * T);
+		mlx_put_image_to_window(game->mlx, game->win, game->collectibles_img, x * T, y * T);
 	else if (tile == 'E')
-		mlx_put_image_to_window(game->mlx, game->win, game->exit_img, x * T, y
-			* T);
-	else if (tile == '0')
-		mlx_put_image_to_window(game->mlx, game->win, game->empty_img, x * T, y
-			* T);
+		mlx_put_image_to_window(game->mlx, game->win, game->exit_img, x * T, y * T);
+	else if (tile == '0' || tile == 'N') // 'N' lasciata vuota, nemico sarà disegnato separatamente
+		mlx_put_image_to_window(game->mlx, game->win, game->empty_img, x * T, y * T);
 	else if (tile == 'P')
-		mlx_put_image_to_window(game->mlx, game->win,
-			game->player_sprites[game->current_frame], x * T, y * T);
-	else if (tile == 'N')
-		mlx_put_image_to_window(game->mlx, game->win, game->enemy_img, x * T, y
-			* T);
+	{
+		if (game->player_dir == DIR_RIGHT)
+			mlx_put_image_to_window(game->mlx, game->win,
+									game->player_sprites[game->current_frame], x * T, y * T);
+		else
+			mlx_put_image_to_window(game->mlx, game->win,
+									game->player_left_sprites[game->current_frame], x * T, y * T);
+	}
 }

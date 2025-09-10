@@ -27,12 +27,16 @@ int	handle_keypress(int key, t_game *game)
 	}
 	else if (key == KEY_W)
 		new_y--;
-	else if (key == KEY_A)
+	else if (key == KEY_A){
 		new_x--;
+		game->player_dir = DIR_LEFT;
+	}
 	else if (key == KEY_S)
 		new_y++;
-	else if (key == KEY_D)
+	else if (key == KEY_D){
 		new_x++;
+		game->player_dir = DIR_RIGHT;
+	}
 	if (key == KEY_W || key == KEY_A || key == KEY_S || key == KEY_D)
 		move_player(game, new_x, new_y);
 	return (0);

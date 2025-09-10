@@ -47,7 +47,7 @@ void	cleanup(t_game *game)
 	int	i;
 
 	i = 0;
-	while (i < 3)
+	while (i < 8)
 	{
 		destroy_image_if_not_null(game->mlx, game->player_sprites[i]);
 		i++;
@@ -56,7 +56,17 @@ void	cleanup(t_game *game)
 	destroy_image_if_not_null(game->mlx, game->collectibles_img);
 	destroy_image_if_not_null(game->mlx, game->exit_img);
 	destroy_image_if_not_null(game->mlx, game->empty_img);
-	destroy_image_if_not_null(game->mlx, game->enemy_img);
+	destroy_image_if_not_null(game->mlx, game->wall_top_img);
+	destroy_image_if_not_null(game->mlx, game->wall_bottom_img);
+	destroy_image_if_not_null(game->mlx, game->wall_left_img);
+	destroy_image_if_not_null(game->mlx, game->wall_right_img);
+
+	destroy_image_if_not_null(game->mlx, game->wall_topleft_img);
+	destroy_image_if_not_null(game->mlx, game->wall_topright_img);
+	destroy_image_if_not_null(game->mlx, game->wall_bottomleft_img);
+	destroy_image_if_not_null(game->mlx, game->wall_bottomright_img);
+
+
 	i = 0;
 	while (i < game->height && game->map[i])
 	{
