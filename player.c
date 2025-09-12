@@ -54,19 +54,30 @@ void	update_position(t_game *game, int new_x, int new_y)
 
 void	move_player(t_game *game, int new_x, int new_y)
 {
-	if (game->map[new_y][new_x] != '1')
-	{
-		if (game->map[new_y][new_x] == 'N')
-		{
-			ft_printf("Game Over! You were caught by an enemy!\n");
-			close_game(game);
-		}
-		count_collectibles(game);
-		handle_collectible(game, new_x, new_y);
-		update_position(game, new_x, new_y);
-		game->moves++;
-		ft_printf("Moves: %d\n", game->moves);
-		render_map(game);
-		display_moves(game);
-	}
+	char tile;
+
+	tile = game->map[new_y][new_x];
+
+	// Blocchi invalicabili: muro, albero, casa, roccia
+	if (tile == '1' || tile == 'A' || tile == 'H' || tile == 'T')
+		return;
+
+	// Gestione collectibles
+	count_collectibles(game);
+	handle_collectible(game, new_x, new_y);
+
+	// Aggiorna posizione
+	update_position(game, new_x, new_y);
+	game->moves++;
+	ft_printf("Moves: %d\n", game->moves);
+	
+	 if (check_player_enemy_collision(game))
+    {
+        ft_printf("Game Over! You were caught by an enemy!\n");
+        close_game(game);
+        return;
+    }
+	// Quando ha finito di muoversi, torna idle
+	game->player_state = IDLE;
 }
+

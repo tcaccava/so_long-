@@ -15,7 +15,7 @@
 int	main(int argc, char **argv)
 {
 	t_game	game;
-
+	srand(time(NULL));
 	if (argc != 2)
 	{
 		ft_printf("Error\n");

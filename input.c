@@ -19,25 +19,43 @@ int	handle_keypress(int key, t_game *game)
 
 	new_x = game->player_x;
 	new_y = game->player_y;
+
 	if (key == KEY_ESC)
 	{
-		ft_printf("HUMAN, HOW DARE YOU CLOSE ME?");
+		ft_printf("HUMAN, HOW DARE YOU CLOSE ME?\n");
 		cleanup(game);
 		exit(0);
 	}
-	else if (key == KEY_W)
+
+	game->player_state = IDLE; // di default resta fermo
+
+	if (key == KEY_W)
+	{
 		new_y--;
-	else if (key == KEY_A){
+		game->player_state = WALK;
+	}
+	else if (key == KEY_A)
+	{
 		new_x--;
 		game->player_dir = DIR_LEFT;
+		game->player_state = WALK;
 	}
 	else if (key == KEY_S)
+	{
 		new_y++;
-	else if (key == KEY_D){
+		game->player_state = WALK;
+	}
+	else if (key == KEY_D)
+	{
 		new_x++;
 		game->player_dir = DIR_RIGHT;
+		game->player_state = WALK;
 	}
-	if (key == KEY_W || key == KEY_A || key == KEY_S || key == KEY_D)
+
+	if (game->player_state == WALK)
 		move_player(game, new_x, new_y);
+
 	return (0);
 }
+
+

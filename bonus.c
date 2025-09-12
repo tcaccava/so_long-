@@ -12,26 +12,7 @@
 
 #include "so_long.h"
 
-void	render_map_row(t_game *game, int y)
-{
-	int	x;
 
-	x = 0;
-	while (x <= game->width - 1)
-	{
-		render_tile(game, game->map[y][x], x, y);
-		x++;
-	}
-}
-
-void	fill_remaining_rows(t_game *game, int i)
-{
-	while (i < game->height)
-	{
-		game->map[i] = NULL;
-		i++;
-	}
-}
 
 void	ft_putunsignednbr(unsigned int n, int *length)
 {

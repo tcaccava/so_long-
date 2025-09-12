@@ -54,7 +54,7 @@ void	cleanup(t_game *game)
 	}
 	destroy_image_if_not_null(game->mlx, game->wall_img);
 	destroy_image_if_not_null(game->mlx, game->collectibles_img);
-	destroy_image_if_not_null(game->mlx, game->exit_img);
+	destroy_image_if_not_null(game->mlx, game->exit_img_left);
 	destroy_image_if_not_null(game->mlx, game->empty_img);
 	destroy_image_if_not_null(game->mlx, game->wall_top_img);
 	destroy_image_if_not_null(game->mlx, game->wall_bottom_img);

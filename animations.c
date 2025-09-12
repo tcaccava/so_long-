@@ -12,25 +12,62 @@
 
 #include "so_long.h"
 
-void	update_animation(t_game *game)
+void update_animation(t_game *game)
 {
 	game->anim_timer++;
+
 	if (game->anim_timer >= 15)
 	{
-		game->current_frame++;
-		if (game->current_frame >= 8)
-			game->current_frame = 0;
+		if (game->player_dir == DIR_RIGHT)
+		{
+			game->current_frame_right++;
+			if (game->current_frame_right >= 8)
+				game->current_frame_right = 0;
+		}
+		else if (game->player_dir == DIR_LEFT)
+		{
+			game->current_frame_left++;
+			if (game->current_frame_left >= 8)
+				game->current_frame_left = 0;
+		}
 		game->anim_timer = 0;
 	}
 }
 
-int	update_game(t_game *game)
+void render_player(t_game *game)
 {
-	 int j = 0;
+	void *frame;
+
+	if (game->player_dir == DIR_LEFT)
+		frame = game->player_left_sprites[game->current_frame_left];
+	else
+		frame = game->player_sprites[game->current_frame_right];
+	mlx_put_image_to_window(game->mlx, game->win, frame, game->player_x * T, game->player_y * T);
+}
+
+int update_game(t_game *game)
+{
+    int j;
+
+    // animazione alberi
+    game->tree_timer++;
+    if (game->tree_timer >= 30) // velocità animazione
+    {
+        game->tree_frame++;
+        if (game->tree_frame >= 6)
+            game->tree_frame = 0;
+        game->tree_timer = 0;
+    }
+
+    // animazioni player
+    update_animation(game);
+
+    // animazioni nemici
+    j = 0;
     while (j < game->num_enemies)
     {
         game->enemies[j].anim_timer++;
-        if (game->enemies[j].anim_timer >= 20) // velocità animazione nemici
+        if (game->enemies[j].anim_timer >= 20)
         {
             game->enemies[j].current_frame++;
             if (game->enemies[j].current_frame >= 8)
@@ -39,9 +76,18 @@ int	update_game(t_game *game)
         }
         j++;
     }
+
+    // sposta i nemici
+    move_enemies(game);
 	
-	update_animation(game);
-	render_map(game);
-	render_enemies(game);
-	return (0);
+    // ridisegna la mappa **dopo aver aggiornato le posizioni dei nemici**
+    render_map(game);
+
+    // renderizza nemici nella nuova posizione
+    render_enemies(game);
+
+    // renderizza player
+    render_player(game);
+
+    return (0);
 }

@@ -73,6 +73,27 @@ int count_map_lines(char *file)
 	return (count);
 }
 
+void	render_map_row(t_game *game, int y)
+{
+	int	x;
+
+	x = 0;
+	while (x <= game->width - 1)
+	{
+		render_tile(game, game->map[y][x], x, y);
+		x++;
+	}
+}
+
+void	fill_remaining_rows(t_game *game, int i)
+{
+	while (i < game->height)
+	{
+		game->map[i] = NULL;
+		i++;
+	}
+}
+
 int render_map(t_game *game)
 {
 	int y;
@@ -117,17 +138,17 @@ void render_tile(t_game *game, char tile, int x, int y)
 	}
 	else if (tile == 'C')
 		mlx_put_image_to_window(game->mlx, game->win, game->collectibles_img, x * T, y * T);
-	else if (tile == 'E')
-		mlx_put_image_to_window(game->mlx, game->win, game->exit_img, x * T, y * T);
-	else if (tile == '0' || tile == 'N') // 'N' lasciata vuota, nemico sarà disegnato separatamente
+	else if (tile == '0')
 		mlx_put_image_to_window(game->mlx, game->win, game->empty_img, x * T, y * T);
-	else if (tile == 'P')
-	{
-		if (game->player_dir == DIR_RIGHT)
-			mlx_put_image_to_window(game->mlx, game->win,
-									game->player_sprites[game->current_frame], x * T, y * T);
-		else
-			mlx_put_image_to_window(game->mlx, game->win,
-									game->player_left_sprites[game->current_frame], x * T, y * T);
-	}
+	else if (tile == 'A')
+		mlx_put_image_to_window(game->mlx, game->win,
+								game->tree_sprites[game->tree_frame], x * T, y * T);
+	else if (tile == 'H')
+		mlx_put_image_to_window(game->mlx, game->win, game->house_img, x * T, y * T);
+	else if (tile == 'T')
+		mlx_put_image_to_window(game->mlx, game->win, game->tower_img, x * T, y * T);
+	else if (tile == 'E') // prima cella del castello
+		mlx_put_image_to_window(game->mlx, game->win, game->exit_img_left, x * T, y * T);
+	else if (tile == 'F') // seconda cella del castello
+		mlx_put_image_to_window(game->mlx, game->win, game->exit_img_right, x * T, y * T);
 }
