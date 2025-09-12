@@ -40,9 +40,8 @@ void	update_position(t_game *game, int new_x, int new_y)
 		}
 		else
 		{
+			game->game_state = VICTORY;
 			ft_printf("Player wins! Total moves: %d\n", game->moves);
-			mlx_loop_end(game->mlx);
-			cleanup(game);
 			return ;
 		}
 	}
@@ -55,6 +54,9 @@ void	update_position(t_game *game, int new_x, int new_y)
 void	move_player(t_game *game, int new_x, int new_y)
 {
 	char tile;
+
+	if (game->game_state != PLAYING)
+		return;
 
 	tile = game->map[new_y][new_x];
 
@@ -74,7 +76,7 @@ void	move_player(t_game *game, int new_x, int new_y)
 	 if (check_player_enemy_collision(game))
     {
         ft_printf("Game Over! You were caught by an enemy!\n");
-        close_game(game);
+        game->game_state = GAME_OVER;
         return;
     }
 	// Quando ha finito di muoversi, torna idle

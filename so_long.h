@@ -20,20 +20,42 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <time.h>
+#include <sys/time.h>
 
 #define T 64
 #define KEY_W 119
 #define KEY_A 97
 #define KEY_S 115
 #define KEY_D 100
+#define KEY_R 114
 #define KEY_ESC 65307
 #define BUFFER_SIZE 42
+#define MAX_PARTICLES 100
 
 typedef enum e_dir
 {
 	DIR_LEFT,
 	DIR_RIGHT
 } t_dir;
+
+typedef enum e_game_state
+{
+	PLAYING,
+	GAME_OVER,
+	VICTORY
+} t_game_state;
+
+typedef struct s_particle
+{
+	float x;
+	float y;
+	float vel_x;
+	float vel_y;
+	int life;
+	int max_life;
+	int color;
+	int active;
+} t_particle;
 
 typedef struct s_enemy
 {
@@ -45,15 +67,6 @@ typedef struct s_enemy
 	int move_timer;
 
 } t_enemy;
-
-typedef struct s_data
-{
-	void *img;
-	char *addr;
-	int bits_per_pixel;
-	int line_length;
-	int endian;
-} t_data;
 
 typedef enum e_player_state
 {
@@ -68,6 +81,7 @@ typedef struct s_game
 	char **map;
 	int width;
 	int height;
+	// images
 	void *wall_img;
 	void *player_img;
 	void *collectibles_img;
@@ -86,16 +100,16 @@ typedef struct s_game
 	void *wall_topright_img;
 	void *wall_bottomleft_img;
 	void *wall_bottomright_img;
-
+	// environment
 	void *tree_sprites[6];
 	int tree_frame;
 	int tree_timer;
 	void *house_img;
 	void *tower_img;
-
 	void *exit_img_left;
 	void *exit_img_right;
 
+	// Player
 	int player_x;
 	int player_y;
 	t_dir player_dir;
@@ -106,10 +120,24 @@ typedef struct s_game
 	int current_frame_left;
 	int anim_timer;
 	int anim_speed;
+
+	// Game state
 	int collectibles;
 	int moves;
 	int on_exit;
-	t_data img;
+	t_game_state game_state;
+
+	// Timer system
+	struct timeval start_time;
+	int game_time_seconds;
+
+	// Scoring
+	int score;
+
+	// Particles
+	t_particle particles[MAX_PARTICLES];
+
+	// Enemies
 	t_enemy *enemies;
 	int num_enemies;
 } t_game;
@@ -184,7 +212,20 @@ void render_player(t_game *game);
 void move_enemies(t_game *game);
 int is_position_occupied_by_enemy(t_game *game, int x, int y, int current_enemy_index);
 int check_player_enemy_collision(t_game *game);
-
+void init_timer(t_game *game);
+void update_timer(t_game *game);
+void display_timer(t_game *game);
+void calculate_score(t_game *game);
+void show_game_over_screen(t_game *game);
+void show_victory_screen(t_game *game);
+void restart_game(t_game *game, char *filename);
+void init_particles(t_game *game);
+void spawn_particles(t_game *game, int x, int y);
+void update_particles(t_game *game);
+void render_particles(t_game *game);
+void draw_rectangle(t_game *game, int x, int y, int width, int height, int color);
+void draw_text_centered(t_game *game, char *text, int y, int color);
+void set_map_filename(char *filename);
 
 
 #endif

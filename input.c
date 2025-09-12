@@ -12,6 +12,9 @@
 
 #include "so_long.h"
 
+// Variabile globale per il filename (necessaria per il restart)
+static char *g_map_filename = NULL;
+
 int	handle_keypress(int key, t_game *game)
 {
 	int	new_x;
@@ -27,7 +30,20 @@ int	handle_keypress(int key, t_game *game)
 		exit(0);
 	}
 
+		// Gestione input durante game over o victory
+	if (game->game_state == GAME_OVER || game->game_state == VICTORY)
+	{
+		if (key == KEY_R && g_map_filename)
+		{
+			restart_game(game, g_map_filename);
+			return (0);
+		}
+		return (0); // Ignora altri input durante game over/victory
+	}
+
+	// Input normale durante il gioco
 	game->player_state = IDLE; // di default resta fermo
+
 
 	if (key == KEY_W)
 	{
@@ -58,4 +74,14 @@ int	handle_keypress(int key, t_game *game)
 	return (0);
 }
 
+void set_map_filename(char *filename)
+{
+	if (g_map_filename)
+		free(g_map_filename);
+	g_map_filename = ft_strdup(filename);
+}
 
+char *get_map_filename(void)
+{
+	return g_map_filename;
+}

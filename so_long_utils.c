@@ -107,6 +107,7 @@ void init_game(t_game *game, char *file)
 	load_images(game);
 	game->win = mlx_new_window(game->mlx, game->width * T, game->height * T,
 							   "so_long");
+	//Map validations
 	check_invalid_chars(game);
 	check_map_shape(game);
 	check_walls(game);
@@ -117,6 +118,7 @@ void init_game(t_game *game, char *file)
 		cleanup(game);
 		exit(1);
 	}
+	//Init animations and status
 	game->current_frame_right = 0;
 	game->current_frame_left = 0;
 	game->anim_timer = 0;
@@ -125,7 +127,17 @@ void init_game(t_game *game, char *file)
 	game->player_state = IDLE;
 	game->tree_frame = 0;
 	game->tree_timer = 0;
+
+	// Inizializzazioni nuovo sistema
+	game->game_state = PLAYING;
+	game->score = 0;
+	init_timer(game);
+	init_particles(game);
+	//Load enemies
 	load_enemies(game);
+
+	// Salva filename per restart
+	set_map_filename(file);
 }
 
 void display_moves(t_game *game)

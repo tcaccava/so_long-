@@ -30,6 +30,11 @@ int	main(int argc, char **argv)
 		return (1);
 	init_game(&game, argv[1]);
 	render_map(&game);
+	ft_printf("=== SO_LONG ENHANCED ===\n");
+	ft_printf("Controls: WASD to move, ESC to quit\n");
+	ft_printf("During Game Over/Victory: R to restart\n");
+	ft_printf("Collect all items and reach the castle to win!\n");
+	ft_printf("========================\n");
 	mlx_hook(game.win, 2, 1L << 0, handle_keypress, &game);
 	mlx_hook(game.win, 17, 0, close_window, &game);
 	mlx_loop_hook(game.mlx, update_game, &game);

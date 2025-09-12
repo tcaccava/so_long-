@@ -12,30 +12,32 @@
 
 #include "so_long.h"
 
-void	handle_collectible(t_game *game, int new_x, int new_y)
+void handle_collectible(t_game *game, int new_x, int new_y)
 {
 	if (game->map[new_y][new_x] == 'C')
 	{
+		// Spawna particelle prima di rimuovere il collectible
+		spawn_particles(game, new_x, new_y);
 		game->map[new_y][new_x] = '0';
 		game->collectibles--;
 		printf("Collectible collected, remaining : %d\n", game->collectibles);
 	}
 }
 
-void	count_collectibles(t_game *game)
+void count_collectibles(t_game *game)
 {
-	int	y;
-	int	x;
+	int y;
+	int x;
 
 	game->collectibles = 0;
 	y = 0;
 	x = 0;
 	if (!game || !game->map)
-		return ;
+		return;
 	while (y < game->height && game->map[y])
 	{
 		if (!game->map[y])
-			return ;
+			return;
 		x = 0;
 		while (x < game->width && game->map[y][x])
 		{

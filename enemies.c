@@ -78,8 +78,8 @@ void check_for_enemy(t_game *game, int new_x, int new_y)
         if (game->enemies[i].x == new_x && game->enemies[i].y == new_y)
         {
             ft_printf("Game Over! You hit an enemy.\n");
-            cleanup(game);
-            exit(0);
+            game->game_state = GAME_OVER;
+            return;
         }
         i++;
     }
@@ -125,6 +125,10 @@ void move_enemies(t_game *game)
     int new_y;
     int dir;
 
+    // Non muovere nemici se il gioco non è in corso
+    if (game->game_state != PLAYING)
+        return;
+
     i = 0;
     while (i < game->num_enemies)
     {
@@ -168,7 +172,7 @@ void move_enemies(t_game *game)
                 if (check_player_enemy_collision(game))
                 {
                     ft_printf("Game Over! A nemico ti ha preso!\n");
-                    close_game(game);
+                    game->game_state = GAME_OVER;
                     return;
                 }
             }
