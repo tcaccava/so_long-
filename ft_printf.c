@@ -12,7 +12,8 @@
 
 #include "so_long.h"
 
-void	ft_formatspecifier(char specifier, va_list args, int *length)
+// Handles format specifiers
+void ft_formatspecifier(char specifier, va_list args, int *length)
 {
 	if (specifier == 'c')
 		ft_putchar(va_arg(args, int), length);
@@ -32,11 +33,12 @@ void	ft_formatspecifier(char specifier, va_list args, int *length)
 		ft_putunsignednbr(va_arg(args, unsigned int), length);
 }
 
-int	ft_printf(const char *print, ...)
+// Variadic function that prints in the STOUT
+int ft_printf(const char *print, ...)
 {
-	int		i;
-	int		length;
-	va_list	args;
+	int i;
+	int length;
+	va_list args;
 
 	i = 0;
 	length = 0;

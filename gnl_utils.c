@@ -12,9 +12,10 @@
 
 #include "so_long.h"
 
-size_t	ft_strlen(const char *s)
+// Calcs string length
+size_t ft_strlen(const char *s)
 {
-	size_t	i;
+	size_t i;
 
 	i = 0;
 	while (s[i])
@@ -22,10 +23,11 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strdup(const char *s)
+// Dups string
+char *ft_strdup(const char *s)
 {
-	char	*dup;
-	size_t	i;
+	char *dup;
+	size_t i;
 
 	i = 0;
 	if (!s)
@@ -42,9 +44,10 @@ char	*ft_strdup(const char *s)
 	return (dup);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+// Joings strings
+char *ft_strjoin(char *s1, char *s2)
 {
-	char	*join;
+	char *join;
 
 	if (!s1)
 		return (ft_strdup(s2));
@@ -58,7 +61,8 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (join);
 }
 
-char	*ft_strchr(const char *s, int c)
+// Search the first occurrence of a char in a string
+char *ft_strchr(const char *s, int c)
 {
 	if (!s)
 		return (0);
@@ -73,9 +77,10 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
-char	*ft_strcpy(char *dest, const char *src)
+// Copies a string
+char *ft_strcpy(char *dest, const char *src)
 {
-	char	*original_dest;
+	char *original_dest;
 
 	original_dest = dest;
 	if (!src)

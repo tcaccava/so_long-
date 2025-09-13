@@ -12,9 +12,10 @@
 
 #include "so_long.h"
 
-static unsigned int	ft_number_size(int number)
+// Calculates number length
+static unsigned int ft_number_size(int number)
 {
-	unsigned int	length;
+	unsigned int length;
 
 	length = 0;
 	if (number == 0)
@@ -29,11 +30,12 @@ static unsigned int	ft_number_size(int number)
 	return (length);
 }
 
-char	*ft_itoa(int n)
+// Converts integer to string
+char *ft_itoa(int n)
 {
-	unsigned int	number;
-	unsigned int	length;
-	char			*string;
+	unsigned int number;
+	unsigned int length;
+	char *string;
 
 	length = ft_number_size(n);
 	string = (char *)malloc(sizeof(char) * (length + 1));

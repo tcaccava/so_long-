@@ -2,7 +2,7 @@ NAME = so_long
 CC = gcc
 MLX_DIR = ./minilibx-linux
 MLX = -L$(MLX_DIR) -lmlx -lX11 -lXext -lm
-SRCS = main.c get_next_line.c so_long_utils.c bonus.c gnl_utils.c ft_printf.c ft_printf_utils.c collectibles.c check.c player.c input.c exit.c map.c valid_path.c enemies.c animations.c ft_itoa.c particles.c score.c timer.c
+SRCS = $(wildcard *.c)
 OBJ = $(SRCS:.c=.o)
 
 all: $(NAME)

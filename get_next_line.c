@@ -12,17 +12,18 @@
 
 #include "so_long.h"
 
-char	*get_next_line(int fd)
+// Getline
+char *get_next_line(int fd)
 {
-	static char	*loot;
-	char		*line;
+	static char *loot;
+	char *line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	while (!loot || !ft_strchr(loot, '\n'))
 	{
 		if (!read_join(fd, &loot))
-			break ;
+			break;
 	}
 	if (!loot)
 		return (NULL);
@@ -31,11 +32,12 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-int	read_join(int fd, char **loot)
+// Reads from an fd,writes in a buffer and joins with loot
+int read_join(int fd, char **loot)
 {
-	char	*buffer;
-	char	*temp;
-	ssize_t	bytes_read;
+	char *buffer;
+	char *temp;
+	ssize_t bytes_read;
 
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
@@ -57,10 +59,11 @@ int	read_join(int fd, char **loot)
 		return (1);
 }
 
-char	*extract_line(char *loot)
+// Extract lines from loot
+char *extract_line(char *loot)
 {
-	char	*line;
-	size_t	i;
+	char *line;
+	size_t i;
 
 	i = 0;
 	while (loot[i] && loot[i] != '\n')
@@ -82,10 +85,11 @@ char	*extract_line(char *loot)
 	return (line);
 }
 
-char	*clear_loot(char *loot)
+// Clears loot
+char *clear_loot(char *loot)
 {
-	char	*newline_pos;
-	char	*new_loot;
+	char *newline_pos;
+	char *new_loot;
 
 	if (!loot)
 	{

@@ -12,6 +12,7 @@
 
 #include "so_long.h"
 
+// Counts enemies
 int count_enemies(t_game *game)
 {
     int y;
@@ -34,6 +35,7 @@ int count_enemies(t_game *game)
     return count;
 }
 
+// Mallocs and inits enemy's array
 void load_enemies(t_game *game)
 {
     int x, y;
@@ -58,9 +60,9 @@ void load_enemies(t_game *game)
                 game->enemies[enemy_count].current_frame = 0;
                 game->enemies[enemy_count].anim_timer = 0;
                 game->enemies[enemy_count].move_timer = 0;
-                game->enemies[enemy_count].dir = (rand() % 2 == 0) ? DIR_LEFT : DIR_RIGHT;
+                game->enemies[enemy_count].dir = (rand() % 2 == 0) ? DIR_LEFT : DIR_RIGHT; // random left-right spawn
                 enemy_count++;
-                game->map[y][x] = '0';
+                game->map[y][x] = '0'; // updates the spawn position with empty sprites to prevent ghost enemies
             }
             x++;
         }
@@ -68,6 +70,7 @@ void load_enemies(t_game *game)
     }
 }
 
+// Handles player-enemies collisions
 void check_for_enemy(t_game *game, int new_x, int new_y)
 {
     int i;
@@ -85,26 +88,33 @@ void check_for_enemy(t_game *game, int new_x, int new_y)
     }
 }
 
-void update_enemy_animation(t_game *game, t_enemy *enemy)
+// Update enemy's animation timer
+void update_enemy_animations(t_game *game)
 {
-    (void)game;
-    enemy->anim_timer++;
-    if (enemy->anim_timer >= 15) // numero per velocità animazione
+    int j;
+
+    j = 0;
+    while (j < game->num_enemies)
     {
-        enemy->current_frame++;
-        if (enemy->current_frame >= 8)
-            enemy->current_frame = 0;
-        enemy->anim_timer = 0;
+        game->enemies[j].anim_timer++;
+        if (game->enemies[j].anim_timer >= 20)
+        {
+            game->enemies[j].current_frame++;
+            if (game->enemies[j].current_frame >= 8)
+                game->enemies[j].current_frame = 0;
+            game->enemies[j].anim_timer = 0;
+        }
+        j++;
     }
 }
 
+// Render enemy array
 void render_enemies(t_game *game)
 {
     int j = 0;
     while (j < game->num_enemies)
     {
         void *frame;
-
         if (game->enemies[j].dir == DIR_LEFT)
             frame = game->enemy_left_sprites[game->enemies[j].current_frame];
         else
@@ -118,6 +128,7 @@ void render_enemies(t_game *game)
     }
 }
 
+// Handles enemies movement
 void move_enemies(t_game *game)
 {
     int i;
@@ -125,53 +136,50 @@ void move_enemies(t_game *game)
     int new_y;
     int dir;
 
-    // Non muovere nemici se il gioco non è in corso
-    if (game->game_state != PLAYING)
+    if (game->game_state != PLAYING) // doesn't updates enemy position if the game is in victory or gameover state
         return;
 
     i = 0;
     while (i < game->num_enemies)
     {
         game->enemies[i].move_timer++;
-        if (game->enemies[i].move_timer >= 90)
+        if (game->enemies[i].move_timer >= 90) // moves enemy every 1.5s
         {
-            dir = rand() % 4;
+            dir = rand() % 4; // the new direction is random
             new_x = game->enemies[i].x;
             new_y = game->enemies[i].y;
-
-            if (dir == 0)
+            if (dir == 0) // up
                 new_y--;
-            else if (dir == 1)
+            else if (dir == 1) // down
                 new_y++;
-            else if (dir == 2)
+            else if (dir == 2) // left
             {
                 new_x--;
                 game->enemies[i].dir = DIR_LEFT;
             }
-            else if (dir == 3)
+            else if (dir == 3) // right
             {
                 new_x++;
                 game->enemies[i].dir = DIR_RIGHT;
             }
 
-            // controllo collisioni con ostacoli e altri nemici
-            if (game->map[new_y][new_x] != '1' && 
-                game->map[new_y][new_x] != 'H' && 
-                game->map[new_y][new_x] != 'A' && 
-                game->map[new_y][new_x] != 'C' && 
-                game->map[new_y][new_x] != 'T' && 
-                game->map[new_y][new_x] != 'E' && 
+            // avoids collisions with static elements and prevents enemies overlaps
+            if (game->map[new_y][new_x] != '1' &&
+                game->map[new_y][new_x] != 'H' &&
+                game->map[new_y][new_x] != 'A' &&
+                game->map[new_y][new_x] != 'C' &&
+                game->map[new_y][new_x] != 'T' &&
+                game->map[new_y][new_x] != 'E' &&
                 game->map[new_y][new_x] != 'F' &&
-                !is_position_occupied_by_enemy(game, new_x, new_y, i))
+                !is_position_occupied_by_enemy(game, new_x, new_y, i)) // prevents enemies overlaps
             {
-                // Aggiorna posizione
+                // updates positions
                 game->enemies[i].x = new_x;
                 game->enemies[i].y = new_y;
-                
-                // CONTROLLO COLLISIONE DOPO IL MOVIMENTO DEL NEMICO
-                if (check_player_enemy_collision(game))
+
+                if (check_player_enemy_collision(game)) // checks enemy-playes collisions after the movement
                 {
-                    ft_printf("Game Over! A nemico ti ha preso!\n");
+                    ft_printf("Game Over! Enemy hit you\n");
                     game->game_state = GAME_OVER;
                     return;
                 }
@@ -181,6 +189,8 @@ void move_enemies(t_game *game)
         i++;
     }
 }
+
+// Avoids enemies overlap
 int is_position_occupied_by_enemy(t_game *game, int x, int y, int current_enemy_index)
 {
     int i;
@@ -188,17 +198,17 @@ int is_position_occupied_by_enemy(t_game *game, int x, int y, int current_enemy_
     i = 0;
     while (i < game->num_enemies)
     {
-        // Non controllare se stesso
         if (i != current_enemy_index)
         {
             if (game->enemies[i].x == x && game->enemies[i].y == y)
-                return (1); // Posizione occupata
+                return (1); // occupied position
         }
         i++;
     }
-    return (0); // Posizione libera
+    return (0); // free position
 }
 
+// Checks player-enemy collisions
 int check_player_enemy_collision(t_game *game)
 {
     int i;
@@ -206,12 +216,12 @@ int check_player_enemy_collision(t_game *game)
     i = 0;
     while (i < game->num_enemies)
     {
-        if (game->enemies[i].x == game->player_x && 
+        if (game->enemies[i].x == game->player_x &&
             game->enemies[i].y == game->player_y)
         {
-            return (1); // Collisione rilevata
+            return (1); // collision
         }
         i++;
     }
-    return (0); // Nessuna collisione
+    return (0); // no collision
 }

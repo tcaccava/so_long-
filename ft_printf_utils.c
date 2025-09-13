@@ -12,15 +12,17 @@
 
 #include "so_long.h"
 
-void	ft_putchar(char c, int *length)
+// Writes a single character
+void ft_putchar(char c, int *length)
 {
 	write(1, &c, 1);
 	(*length)++;
 }
 
-void	ft_puthexnbr(size_t n, int *length, int uppercase)
+// Handles hex numbers
+void ft_puthexnbr(size_t n, int *length, int uppercase)
 {
-	char	*base;
+	char *base;
 
 	if (uppercase)
 	{
@@ -37,12 +39,13 @@ void	ft_puthexnbr(size_t n, int *length, int uppercase)
 	ft_putchar(base[n % 16], length);
 }
 
-void	ft_putnbr(int n, int *length)
+// Handles int numbers
+void ft_putnbr(int n, int *length)
 {
 	if (n == -2147483648)
 	{
 		ft_putstr("-2147483648", length);
-		return ;
+		return;
 	}
 	if (n < 0)
 	{
@@ -54,21 +57,23 @@ void	ft_putnbr(int n, int *length)
 	ft_putchar('0' + (n % 10), length);
 }
 
-void	ft_putpointer(void *ptr, int *length)
+// Handles memory adresses
+void ft_putpointer(void *ptr, int *length)
 {
-	size_t	n;
+	size_t n;
 
 	if (!ptr)
 	{
 		ft_putstr("(nil)", length);
-		return ;
+		return;
 	}
 	n = (size_t)ptr;
 	ft_putstr("0x", length);
 	ft_puthexnbr(n, length, 0);
 }
 
-void	ft_putstr(char *s, int *length)
+// Handles strings
+void ft_putstr(char *s, int *length)
 {
 	if (!s)
 		s = "(null)";

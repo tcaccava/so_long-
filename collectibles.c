@@ -12,18 +12,19 @@
 
 #include "so_long.h"
 
+// Handle collectibles collection
 void handle_collectible(t_game *game, int new_x, int new_y)
 {
 	if (game->map[new_y][new_x] == 'C')
 	{
-		// Spawna particelle prima di rimuovere il collectible
-		spawn_particles(game, new_x, new_y);
-		game->map[new_y][new_x] = '0';
-		game->collectibles--;
+		spawn_particles(game, new_x, new_y); // spawn particles before removing collectible
+		game->map[new_y][new_x] = '0';		 // remove collectibles
+		game->collectibles--;				 // update collectible count
 		printf("Collectible collected, remaining : %d\n", game->collectibles);
 	}
 }
 
+// Counts collectibles
 void count_collectibles(t_game *game)
 {
 	int y;

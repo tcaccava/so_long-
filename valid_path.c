@@ -12,10 +12,11 @@
 
 #include "so_long.h"
 
-char	**create_map_copy(t_game *game)
+// With flood fill algorythm we need to modify the map,so we create a copy that we can modify without issues
+char **create_map_copy(t_game *game)
 {
-	char	**copy;
-	int		i;
+	char **copy;
+	int i;
 
 	copy = malloc(sizeof(char *) * game->height);
 	i = 0;
@@ -28,9 +29,10 @@ char	**create_map_copy(t_game *game)
 	return (copy);
 }
 
-void	free_map_copy(char **map_copy, t_game *game)
+// Avoid leaks
+void free_map_copy(char **map_copy, t_game *game)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (i < game->height)
@@ -41,27 +43,27 @@ void	free_map_copy(char **map_copy, t_game *game)
 	free(map_copy);
 }
 
-int	is_valid_move(int x, int y, t_game *game)
+// Checks move validity for flood fill
+int is_valid_move(int x, int y, t_game *game)
 {
 	if (!game || !game->map)
 	{
 		ft_printf("Error: game or game->map is NULL\n");
 		return (0);
 	}
-	if (x < 0 || y < 0 || x >= game->width || y >= game->height
-		|| game->map[y][x] == '1')
+	if (x < 0 || y < 0 || x >= game->width || y >= game->height || game->map[y][x] == '1')
 		return (0);
-	return (x >= 0 && x < game->width && y >= 0 && y < game->height
-		&& game->map[y][x] != '1');
+	return (x >= 0 && x < game->width && y >= 0 && y < game->height && game->map[y][x] != '1');
 }
 
-int	find_path(int x, int y, t_game *game, char **map_copy)
+// Flood fill algorithm with recursion
+int find_path(int x, int y, t_game *game, char **map_copy)
 {
-	if (map_copy[y][x] == 'E')
+	if (map_copy[y][x] == 'E') // exit condition
 		return (1);
 	if (map_copy[y][x] == '1')
 		return (0);
-	map_copy[y][x] = '1';
+	map_copy[y][x] = '1'; // set tile to wall to avoid infinite recursion over already visited positions
 	if (is_valid_move(x - 1, y, game) && find_path(x - 1, y, game, map_copy))
 		return (1);
 	if (is_valid_move(x + 1, y, game) && find_path(x + 1, y, game, map_copy))
@@ -73,10 +75,11 @@ int	find_path(int x, int y, t_game *game, char **map_copy)
 	return (0);
 }
 
-int	is_path_valid(t_game *game)
+//Main pathfinding function
+int is_path_valid(t_game *game)
 {
-	int		result;
-	char	**map_copy;
+	int result;
+	char **map_copy;
 
 	map_copy = create_map_copy(game);
 	result = find_path(game->player_x, game->player_y, game, map_copy);

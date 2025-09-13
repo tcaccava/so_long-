@@ -12,63 +12,63 @@
 
 #include "so_long.h"
 
-int	close_game(t_game *game)
+// Closes game when pressing x button on the game window
+int close_window(t_game *game)
 {
 	cleanup(game);
 	exit(0);
 	return (0);
 }
 
-int	close_window(t_game *game)
-{
-	cleanup(game);
-	exit(0);
-	return (0);
-}
-
-void	destroy_image_if_not_null(void *mlx, void *img)
+// Checks images existence before destroying it
+void destroy_image_if_not_null(void *mlx, void *img)
 {
 	if (img == NULL)
-	{
 		ft_printf("Warning: image is NULL.\n");
-	}
 	else if (img == (void *)1)
-	{
 		ft_printf("Warning: image has invalid value (0x1).\n");
-	}
 	if (img != NULL && img != (void *)1)
-	{
 		mlx_destroy_image(mlx, img);
-	}
 }
 
-void	cleanup(t_game *game)
+// Destroy everything to avoid leaks
+void cleanup(t_game *game)
 {
-	int	i;
+	int i;
 
 	i = 0;
-	while (i < 8)
+	while (i < 8) // player,enemies
 	{
 		destroy_image_if_not_null(game->mlx, game->player_sprites[i]);
+		destroy_image_if_not_null(game->mlx, game->player_left_sprites[i]);
+		destroy_image_if_not_null(game->mlx, game->enemy_left_sprites[i]);
+		destroy_image_if_not_null(game->mlx, game->enemy_right_sprites[i]);
 		i++;
 	}
+	while (i < 6) // trees
+	{
+		destroy_image_if_not_null(game->mlx, game->tree_sprites[i]);
+		i++;
+	}
+	// static sprites
 	destroy_image_if_not_null(game->mlx, game->wall_img);
+	destroy_image_if_not_null(game->mlx, game->house_img);
+	destroy_image_if_not_null(game->mlx, game->tower_img);
 	destroy_image_if_not_null(game->mlx, game->collectibles_img);
 	destroy_image_if_not_null(game->mlx, game->exit_img_left);
+	destroy_image_if_not_null(game->mlx, game->exit_img_right);
 	destroy_image_if_not_null(game->mlx, game->empty_img);
 	destroy_image_if_not_null(game->mlx, game->wall_top_img);
 	destroy_image_if_not_null(game->mlx, game->wall_bottom_img);
 	destroy_image_if_not_null(game->mlx, game->wall_left_img);
 	destroy_image_if_not_null(game->mlx, game->wall_right_img);
-
 	destroy_image_if_not_null(game->mlx, game->wall_topleft_img);
 	destroy_image_if_not_null(game->mlx, game->wall_topright_img);
 	destroy_image_if_not_null(game->mlx, game->wall_bottomleft_img);
 	destroy_image_if_not_null(game->mlx, game->wall_bottomright_img);
 
-
 	i = 0;
-	while (i < game->height && game->map[i])
+	while (i < game->height && game->map[i]) // free every map row
 	{
 		free(game->map[i]);
 		i++;

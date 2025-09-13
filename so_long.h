@@ -22,7 +22,8 @@
 #include <time.h>
 #include <sys/time.h>
 
-#define T 64
+#define T 64 // tile size
+// keycodes
 #define KEY_W 119
 #define KEY_A 97
 #define KEY_S 115
@@ -30,7 +31,7 @@
 #define KEY_R 114
 #define KEY_ESC 65307
 #define BUFFER_SIZE 42
-#define MAX_PARTICLES 100
+#define MAX_PARTICLES 100 // particles number
 
 typedef enum e_dir
 {
@@ -61,9 +62,9 @@ typedef struct s_enemy
 {
 	int x;
 	int y;
-	int current_frame; // per sapere quale frame mostrare
+	int current_frame;
 	int anim_timer;
-	t_dir dir; // per gestire la velocità dell’animazione
+	t_dir dir;
 	int move_timer;
 
 } t_enemy;
@@ -81,7 +82,6 @@ typedef struct s_game
 	char **map;
 	int width;
 	int height;
-	// images
 	void *wall_img;
 	void *player_img;
 	void *collectibles_img;
@@ -89,18 +89,14 @@ typedef struct s_game
 	void *empty_img;
 	void *enemy_left_sprites[8];
 	void *enemy_right_sprites[8];
-	// Muri / bordi
 	void *wall_top_img;
 	void *wall_bottom_img;
 	void *wall_left_img;
 	void *wall_right_img;
-
-	// Angoli
 	void *wall_topleft_img;
 	void *wall_topright_img;
 	void *wall_bottomleft_img;
 	void *wall_bottomright_img;
-	// environment
 	void *tree_sprites[6];
 	int tree_frame;
 	int tree_timer;
@@ -109,7 +105,6 @@ typedef struct s_game
 	void *exit_img_left;
 	void *exit_img_right;
 
-	// Player
 	int player_x;
 	int player_y;
 	t_dir player_dir;
@@ -121,23 +116,16 @@ typedef struct s_game
 	int anim_timer;
 	int anim_speed;
 
-	// Game state
 	int collectibles;
 	int moves;
 	int on_exit;
 	t_game_state game_state;
 
-	// Timer system
 	struct timeval start_time;
 	int game_time_seconds;
-
-	// Scoring
 	int score;
-
-	// Particles
 	t_particle particles[MAX_PARTICLES];
 
-	// Enemies
 	t_enemy *enemies;
 	int num_enemies;
 } t_game;
@@ -175,7 +163,6 @@ void handle_collectible(t_game *game, int new_x, int new_y);
 void int_to_str(int num, char *str);
 void init_game(t_game *game, char *file);
 void check_exit(t_game *game);
-int close_game(t_game *game);
 int close_window(t_game *game);
 int count_map_lines(char *file);
 void find_player(t_game *game);
@@ -205,7 +192,7 @@ int is_file_empty(char *filename);
 char *ft_itoa(int n);
 void destroy_image_if_not_null(void *mlx, void *img);
 void check_invalid_chars(t_game *game);
-void update_enemy_animation(t_game *game, t_enemy *enemy);
+void update_enemy_animations(t_game *game);
 void render_enemies(t_game *game);
 int count_enemies(t_game *game);
 void render_player(t_game *game);
@@ -226,6 +213,6 @@ void render_particles(t_game *game);
 void draw_rectangle(t_game *game, int x, int y, int width, int height, int color);
 void draw_text_centered(t_game *game, char *text, int y, int color);
 void set_map_filename(char *filename);
-
+void update_tree_animations(t_game *game);
 
 #endif
